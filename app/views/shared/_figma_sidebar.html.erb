@@ -1,0 +1,125 @@
+<%# Sidebar matching your Figma design %>
+<div class="w-60 h-screen bg-sidebar-bg fixed left-0 top-0">
+  
+  <!-- Logo Section -->
+  <div class="w-20 h-4 ml-[79px] mt-[14px] relative">
+    <div class="flex items-center">
+      <!-- Logo Icon -->
+      <div class="w-2.5 h-4 bg-brand-primary relative mr-2">
+        <div class="w-1.5 h-2 absolute left-[2.2px] top-[5.5px] text-white text-[7px] font-normal text-center">$</div>
+      </div>
+      <!-- Logo Text -->
+      <div class="text-sidebar-text font-inter">
+        <span class="text-base font-normal">Rain</span><span class="text-base font-bold">CRM</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Navigation Menu -->
+  <div class="mt-[65px] space-y-[27px]">
+    
+    <!-- Dashboard -->
+    <div class="flex items-center ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px]"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter">Dashboard</div>
+    </div>
+    
+    <!-- Tasks/Critical (Stages) -->
+    <div class="flex items-center ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px]"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter">Tasks/critical (stages)</div>
+    </div>
+    
+    <!-- Calendar -->
+    <div class="flex items-center ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px]"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter">Calendar</div>
+    </div>
+    
+    <!-- Tasks Critical loan tasks -->
+    <div class="flex items-start ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px] mt-1"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter leading-tight">
+        Tasks<br/>Critical<br/>loan tasks
+      </div>
+    </div>
+    
+    <!-- Separator -->
+    <div class="w-44 h-0 ml-[23px] border-t border-sidebar-text opacity-25"></div>
+    
+    <!-- Leads -->
+    <div class="flex items-center ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px]"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter">Leads</div>
+    </div>
+    
+    <!-- Contacts -->
+    <div class="flex items-center ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px]"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter">Contacts</div>
+    </div>
+    
+    <!-- Companies -->
+    <div class="flex items-center ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px]"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter">Companies</div>
+    </div>
+    
+    <!-- Separator -->
+    <div class="w-44 h-0 ml-[23px] border-t border-sidebar-text opacity-25"></div>
+    
+    <!-- Forms -->
+    <div class="flex items-center ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px]"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter">Forms</div>
+    </div>
+    
+    <!-- Emails -->
+    <div class="flex items-center ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px]"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter">Emails</div>
+    </div>
+    
+    <!-- Companies (second) -->
+    <div class="flex items-center ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px]"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter">Companies</div>
+    </div>
+    
+    <!-- Lending Outlets -->
+    <div class="flex items-start ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px] mt-1"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter leading-tight">
+        Lending Outlets : mortgage companies,
+      </div>
+    </div>
+    
+    <!-- Help & Support -->
+    <div class="flex items-center ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px]"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter">Help & Support</div>
+    </div>
+    
+    <!-- Settings -->
+    <div class="flex items-center ml-[23px]">
+      <div class="w-3 h-3 border border-sidebar-text mr-[23px]"></div>
+      <div class="text-sidebar-text text-sm font-normal font-inter">Settings</div>
+    </div>
+    
+  </div>
+  
+  <!-- User Profile Section at Bottom -->
+  <div class="absolute bottom-[44px] left-[23px] w-36 h-7">
+    <div class="w-7 h-7 bg-zinc-300 rounded-full"></div>
+    <div class="absolute left-[38px] top-[1px] text-sidebar-text text-sm font-semibold font-inter">
+      <%= current_user.full_name %>
+    </div>
+    <div class="absolute left-[38px] top-[16px] text-sidebar-text text-[10px] font-normal font-inter">
+      <%= current_user.email %>
+    </div>
+  </div>
+  
+  <!-- Bottom Gradient -->
+  <div class="absolute bottom-0 w-full h-12 bg-gradient-to-b from-white/30 to-sidebar-bg/30"></div>
+  
+</div>

@@ -1,0 +1,79 @@
+<% content_for :head do %>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .font-inter { font-family: 'Inter', system-ui, sans-serif; }
+  </style>
+<% end %>
+
+<%# Kanban Board View - Matching Figma Design %>
+<div class="w-full h-screen relative bg-white overflow-hidden flex">
+  <%= render 'shared/figma_sidebar' %>
+  
+  <!-- Main Content Area -->
+  <div class="flex-1 px-6 bg-white flex flex-col justify-center items-center gap-5 overflow-hidden">
+    
+    <!-- Header -->
+    <div class="self-stretch h-8 flex flex-col justify-start items-start">
+      <div class="text-black text-2xl font-bold font-inter">Dashboard</div>
+    </div>
+    
+    <!-- Stage Headers -->
+    <div class="self-stretch h-7 relative">
+      <% @stages.each_with_index do |stage, index| %>
+        <div class="w-64 h-7 absolute bg-zinc-300 rounded border border-zinc-300 overflow-hidden flex items-center justify-center"
+             style="left: <%= index * 266 + (index > 0 ? 35 : 35) %>px">
+          <div class="text-black text-xl font-semibold font-inter"><%= stage[:name] %></div>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- View Type and Filter Controls -->
+    <div class="w-full h-6 relative flex gap-4">
+      <div class="w-24 h-6 bg-zinc-100 rounded flex items-center px-2">
+        <span class="text-stone-400 text-[10px] font-medium font-inter">View Type:</span>
+        <span class="text-neutral-700 text-[10px] font-medium font-inter ml-1">Kanban</span>
+      </div>
+      <div class="w-24 h-6 bg-zinc-100 rounded flex items-center px-2">
+        <span class="text-stone-400 text-[10px] font-medium font-inter">Party:</span>
+        <span class="text-neutral-700 text-[10px] font-medium font-inter ml-1">Underwriter</span>
+      </div>
+    </div>
+    
+    <!-- Kanban Columns with Drag & Drop -->
+    <div class="w-full h-[684px] relative" 
+         data-controller="kanban" 
+         data-kanban-update-url-value="/deals"
+         data-kanban-csrf-token-value="<%= form_authenticity_token %>">
+      
+      <% @stages.each_with_index do |stage, column_index| %>
+        <div class="absolute w-64 h-full overflow-y-auto" 
+             style="left: <%= column_index * 266 + (column_index > 0 ? 35 : 0) %>px">
+          
+          <!-- Deal Cards in this stage -->
+          <div class="space-y-4 min-h-full p-2" 
+               data-kanban-target="column"
+               data-status="<%= stage[:status_key] %>">
+            
+            <% stage[:deals].each do |deal| %>
+              <div data-kanban-target="card" 
+                   data-deal-id="<%= deal.id %>"
+                   data-original-status="<%= deal.status %>"
+                   class="cursor-move hover:shadow-lg transition-shadow duration-200">
+                <%= render 'shared/kanban_deal_card', deal: deal %>
+              </div>
+            <% end %>
+            
+            <!-- Empty state for columns -->
+            <% if stage[:deals].empty? %>
+              <div class="h-20 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-sm">
+                Drop deals here
+              </div>
+            <% end %>
+            
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+  </div>
+</div>

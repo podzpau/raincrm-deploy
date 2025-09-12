@@ -1,0 +1,177 @@
+<%# Mobile-optimized Kanban view %>
+<div class="md:hidden w-full h-screen bg-white overflow-hidden">
+  
+  <!-- Mobile Header -->
+  <div class="px-4 py-6 bg-white border-b border-gray-200">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-xl font-bold font-inter text-black">Dashboard</h1>
+      <button class="p-2 rounded-lg bg-brand-primary text-white">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Mobile Filter Tabs -->
+    <div class="flex space-x-2 overflow-x-auto pb-2" 
+         data-controller="kanban-filter"
+         data-kanban-filter-current-filter-value="<%= params[:party] || 'all' %>">
+      
+      <% @stages.each_with_index do |stage, index| %>
+        <button class="flex-shrink-0 px-4 py-2 rounded-lg font-medium text-sm transition-colors
+                       <%= index == 0 ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>"
+                data-action="click->kanban-filter#switchStage"
+                data-stage="<%= index %>">
+          <%= stage[:name] %>
+          <span class="ml-2 px-2 py-1 rounded-full bg-white/20 text-xs">
+            <%= stage[:deals].count %>
+          </span>
+        </button>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Mobile Deal Cards - Single Column Scrollable -->
+  <div class="flex-1 overflow-y-auto px-4 py-4" 
+       data-controller="kanban" 
+       data-kanban-update-url-value="/deals"
+       data-kanban-csrf-token-value="<%= form_authenticity_token %>">
+    
+    <% @stages.each_with_index do |stage, stage_index| %>
+      <div class="<%= stage_index == 0 ? 'block' : 'hidden' %>" 
+           data-stage-panel="<%= stage_index %>"
+           data-kanban-target="column"
+           data-status="<%= stage[:status_key] %>">
+        
+        <!-- Stage Header -->
+        <div class="mb-4">
+          <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+            <%= stage[:name] %>
+            <span class="ml-2 px-2 py-1 rounded-full bg-gray-100 text-xs text-gray-600">
+              <%= stage[:deals].count %>
+            </span>
+          </h2>
+        </div>
+        
+        <!-- Deal Cards -->
+        <div class="space-y-3">
+          <% stage[:deals].each do |deal| %>
+            <div data-kanban-target="card" 
+                 data-deal-id="<%= deal.id %>"
+                 data-original-status="<%= deal.status %>"
+                 class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+              
+              <!-- Mobile Deal Card Content -->
+              <div class="flex justify-between items-start mb-3">
+                <h3 class="font-semibold text-gray-900 text-sm"><%= deal.title %></h3>
+                <button class="p-1 hover:bg-gray-100 rounded">
+                  <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+                  </svg>
+                </button>
+              </div>
+              
+              <div class="space-y-2 text-xs text-gray-600">
+                <div class="flex justify-between">
+                  <span>Client:</span>
+                  <span class="font-medium text-gray-900"><%= deal.contact.full_name %></span>
+                </div>
+                
+                <div class="flex justify-between">
+                  <span>Amount:</span>
+                  <span class="font-medium text-gray-900"><%= number_to_currency(deal.loan_amount) %></span>
+                </div>
+                
+                <div class="flex justify-between">
+                  <span>Due:</span>
+                  <span class="font-medium text-gray-900">
+                    <%= deal.estimated_close_date ? deal.estimated_close_date.strftime("%b %d") : "TBD" %>
+                  </span>
+                </div>
+              </div>
+              
+              <!-- Status and Progress -->
+              <div class="mt-3 pt-3 border-t border-gray-100">
+                <div class="flex items-center justify-between">
+                  <span class="inline-flex px-2 py-1 rounded-full text-xs font-medium <%= status_badge_classes(deal.status) %>">
+                    <%= Deal::STATUS_OPTIONS[deal.status] %>
+                  </span>
+                  
+                  <div class="flex items-center space-x-2">
+                    <!-- Team avatars -->
+                    <div class="flex -space-x-1">
+                      <div class="w-6 h-6 bg-brand-primary rounded-full flex items-center justify-center text-white text-xs">
+                        <%= deal.loan_officer.first_name[0] %>
+                      </div>
+                      <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 text-xs">
+                        <%= deal.contact.first_name[0] %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="mt-2">
+                  <div class="flex justify-between text-xs text-gray-600 mb-1">
+                    <span>Progress</span>
+                    <span><%= deal.status_percentage %>%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-1.5">
+                    <div class="bg-brand-primary h-1.5 rounded-full transition-all duration-300" 
+                         style="width: <%= deal.status_percentage %>%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          
+          <!-- Empty state -->
+          <% if stage[:deals].empty? %>
+            <div class="text-center py-8 text-gray-500">
+              <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 11-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12z" clip-rule="evenodd"/>
+              </svg>
+              <p class="text-sm">No deals in this stage</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+// Mobile stage switching
+document.addEventListener('DOMContentLoaded', function() {
+  const controller = {
+    switchStage: function(event) {
+      const stageIndex = event.target.dataset.stage
+      
+      // Hide all panels
+      document.querySelectorAll('[data-stage-panel]').forEach(panel => {
+        panel.classList.add('hidden')
+      })
+      
+      // Show selected panel
+      const selectedPanel = document.querySelector(`[data-stage-panel="${stageIndex}"]`)
+      if (selectedPanel) {
+        selectedPanel.classList.remove('hidden')
+      }
+      
+      // Update button states
+      document.querySelectorAll('[data-action*="switchStage"]').forEach(btn => {
+        btn.classList.remove('bg-brand-primary', 'text-white')
+        btn.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200')
+      })
+      
+      event.target.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200')
+      event.target.classList.add('bg-brand-primary', 'text-white')
+    }
+  }
+  
+  // Attach event listeners
+  document.querySelectorAll('[data-action*="switchStage"]').forEach(button => {
+    button.addEventListener('click', controller.switchStage)
+  })
+})
+</script>

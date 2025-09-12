@@ -1,0 +1,111 @@
+<%# Custom Deal Card Component - Figma Design Integration Example %>
+<%# Replace the classes below with your actual Figma exported classes %>
+
+<div class="bg-white rounded-2xl shadow-card p-6 border border-gray-100 hover:shadow-lg transition-shadow duration-200">
+  <!-- Header Section -->
+  <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center space-x-3">
+      <!-- Deal Type Icon (customize based on your Figma icons) -->
+      <div class="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center">
+        <% if deal.deal_type == 'purchase' %>
+          <svg class="w-5 h-5 text-brand-primary" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+          </svg>
+        <% else %>
+          <svg class="w-5 h-5 text-brand-secondary" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"/>
+          </svg>
+        <% end %>
+      </div>
+      
+      <!-- Deal Title & Type -->
+      <div>
+        <h3 class="font-display font-semibold text-gray-900 text-lg leading-tight">
+          <%= deal.title %>
+        </h3>
+        <p class="font-body text-sm text-gray-500 capitalize">
+          <%= deal.deal_type %> • <%= deal.contact.full_name %>
+        </p>
+      </div>
+    </div>
+    
+    <!-- Status Badge (customize colors from your Figma design) -->
+    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+                 <%= status_badge_classes(deal.status) %>">
+      <%= Deal::STATUS_OPTIONS[deal.status] %>
+    </span>
+  </div>
+  
+  <!-- Progress Bar (customize based on your Figma progress design) -->
+  <div class="mb-4">
+    <div class="flex justify-between text-sm font-body text-gray-600 mb-2">
+      <span>Progress</span>
+      <span><%= deal.status_percentage %>%</span>
+    </div>
+    <div class="w-full bg-gray-200 rounded-full h-2">
+      <div class="bg-brand-primary h-2 rounded-full transition-all duration-300" 
+           style="width: <%= deal.status_percentage %>%"></div>
+    </div>
+  </div>
+  
+  <!-- Deal Details Grid -->
+  <div class="grid grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-xl">
+    <div>
+      <p class="text-xs font-body text-gray-500 uppercase tracking-wide">Purchase Price</p>
+      <p class="font-display font-semibold text-gray-900">
+        <%= number_to_currency(deal.purchase_price) %>
+      </p>
+    </div>
+    <div>
+      <p class="text-xs font-body text-gray-500 uppercase tracking-wide">Loan Amount</p>
+      <p class="font-display font-semibold text-gray-900">
+        <%= number_to_currency(deal.loan_amount) %>
+      </p>
+    </div>
+  </div>
+  
+  <!-- Footer Actions -->
+  <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+    <!-- Date Info -->
+    <div class="text-sm font-body text-gray-500">
+      <% if deal.days_until_close %>
+        <% if deal.days_until_close > 0 %>
+          <%= deal.days_until_close %> days to close
+        <% elsif deal.days_until_close == 0 %>
+          <span class="text-brand-accent font-medium">Closes today!</span>
+        <% else %>
+          <span class="text-status-overdue font-medium">
+            <%= deal.days_until_close.abs %> days overdue
+          </span>
+        <% end %>
+      <% end %>
+    </div>
+    
+    <!-- Action Button -->
+    <%= link_to deal_path(deal), 
+        class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-brand-primary hover:bg-brand-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition-colors duration-200" do %>
+      View Details
+      <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+      </svg>
+    <% end %>
+  </div>
+</div>
+
+<%# Helper method for status badge classes - add this to your ApplicationHelper %>
+<%# 
+def status_badge_classes(status)
+  case status
+  when 'lead'
+    'bg-status-lead/10 text-status-lead'
+  when 'pre_approval', 'under_contract'
+    'bg-status-active/10 text-status-active'
+  when 'processing', 'underwriting'
+    'bg-status-pending/10 text-status-pending'
+  when 'closed'
+    'bg-status-closed/10 text-status-closed'
+  else
+    'bg-gray-100 text-gray-700'
+  end
+end
+%>

@@ -1,0 +1,61 @@
+<%# Kanban Deal Card - Exact match to Figma design %>
+<div class="w-64 h-56 p-3 rounded-lg border border-zinc-300 bg-white flex flex-col justify-start items-start overflow-hidden">
+  <!-- Card Title -->
+  <div class="w-full h-4 relative mb-2">
+    <div class="text-black text-sm font-bold font-inter">
+      <%= deal.title %>
+    </div>
+  </div>
+  
+  <!-- Three dots menu -->
+  <div class="w-3 h-[2.5px] relative mb-2">
+    <div class="w-[2.5px] h-[2.5px] absolute bg-neutral-950 rounded-full"></div>
+    <div class="w-[2.5px] h-[2.5px] left-[5px] absolute bg-neutral-950 rounded-full"></div>
+    <div class="w-[2.5px] h-[2.5px] left-[10px] absolute bg-neutral-950 rounded-full"></div>
+  </div>
+  
+  <!-- Process Section -->
+  <div class="w-full h-7 relative mb-2">
+    <div class="text-zinc-600 text-xs font-light font-inter">Process</div>
+    <div class="text-black text-xs font-light font-inter mt-1">
+      <%= deal.notes.present? ? truncate(deal.notes, length: 30) : "Borrower submitted documents" %>
+    </div>
+  </div>
+  
+  <!-- Due Date Section -->
+  <div class="w-full h-7 relative mb-3">
+    <div class="text-zinc-600 text-xs font-light font-inter">Due Date</div>
+    <div class="text-black text-xs font-light font-inter mt-1">
+      <%= deal.estimated_close_date ? deal.estimated_close_date.strftime("%B %d, %Y") : "March 21, 2025" %>
+    </div>
+  </div>
+  
+  <!-- Tag/Category -->
+  <div class="w-16 h-4 relative bg-zinc-300 rounded-sm mb-3 flex items-center justify-center">
+    <div class="status-badge text-black text-[8px] font-light font-inter">
+      <%= Deal::STATUS_OPTIONS[deal.status] %>
+    </div>
+  </div>
+  
+  <!-- Avatar Section with Team Members -->
+  <div class="w-9 h-5 relative flex items-center">
+    <!-- First Avatar -->
+    <div class="w-5 h-5 bg-zinc-300 rounded-[10px] flex items-center justify-center">
+      <span class="text-[6px] font-medium font-inter text-black">
+        <%= deal.loan_officer.first_name[0] %>
+      </span>
+    </div>
+    
+    <!-- Second Avatar (outline) -->
+    <div class="w-5 h-5 ml-[-4px] rounded-[10px] border border-zinc-300 bg-white flex items-center justify-center">
+      <span class="text-[6px] font-medium font-inter text-black">
+        <%= deal.contact.first_name[0] %>
+      </span>
+    </div>
+    
+    <!-- +12 indicator -->
+    <div class="ml-1 text-[6px] font-medium font-inter text-black">
+      +12
+    </div>
+  </div>
+</div>
