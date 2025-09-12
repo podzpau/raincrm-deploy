@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: raincrm
+    env: ruby
+    plan: free
+    buildCommand: bundle install; bundle exec rake assets:precompile; bundle exec rake db:create db:migrate db:seed
+    startCommand: bundle exec puma -C config/puma.rb
+    envVars:
+      - key: RUBY_VERSION
+        value: 3.2.2
+      - key: RAILS_ENV
+        value: production
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: raincrm-db
+          property: connectionString
+
+databases:
+  - name: raincrm-db
+    plan: free
