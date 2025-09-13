@@ -3,8 +3,9 @@ services:
     name: raincrm
     env: ruby
     plan: free
-    buildCommand: bundle install --deployment && bundle exec rake db:migrate
+    buildCommand: ./bin/render-build.sh
     startCommand: bundle exec puma -C config/puma.rb
+    autoDeploy: false
     envVars:
       - key: RUBY_VERSION
         value: 3.2.2
@@ -17,6 +18,8 @@ services:
           name: raincrm-db
           property: connectionString
       - key: RAILS_SERVE_STATIC_FILES
+        value: true
+      - key: SKIP_ASSET_PRECOMPILATION
         value: true
 
 databases:
