@@ -24,6 +24,9 @@ Rails.application.configure do
   # Serve static files from the `/public` folder (turn on if using Render)
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
+  # Don't require master key for asset compilation
+  config.require_master_key = false
+
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 

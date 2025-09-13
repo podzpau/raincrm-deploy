@@ -3,7 +3,7 @@ services:
     name: raincrm
     env: ruby
     plan: free
-    buildCommand: bundle install --deployment && npm install && bundle exec rails assets:precompile && bundle exec rake db:migrate
+    buildCommand: bundle install --deployment && bundle exec rails tailwindcss:build && bundle exec rails assets:precompile && bundle exec rake db:migrate
     startCommand: bundle exec puma -C config/puma.rb
     envVars:
       - key: RUBY_VERSION
@@ -18,8 +18,6 @@ services:
           property: connectionString
       - key: RAILS_SERVE_STATIC_FILES
         value: true
-      - key: NODE_VERSION
-        value: 18
 
 databases:
   - name: raincrm-db
