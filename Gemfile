@@ -31,7 +31,7 @@ gem "pundit"
 
 # File encryption and security
 gem "attr_encrypted"
-gem "rbnacl"
+# gem "rbnacl"  # Commented out for deployment - requires libsodium system library
 
 # Email and SMS notifications
 gem "postmark-rails"
