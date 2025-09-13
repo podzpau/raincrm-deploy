@@ -4,7 +4,7 @@ services:
     env: ruby
     plan: free
     buildCommand: ./bin/render-build.sh
-    startCommand: bundle exec puma -C config/puma.rb
+    startCommand: bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:$PORT
     autoDeploy: false
     envVars:
       - key: RUBY_VERSION

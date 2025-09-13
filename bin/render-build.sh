@@ -5,7 +5,7 @@ set -o errexit
 echo "Installing Ruby dependencies..."
 bundle install --deployment
 
-echo "Running database migrations..."
-bundle exec rake db:migrate
+echo "Setting up database..."
+bundle exec rake db:create db:migrate
 
 echo "Build complete - skipping asset precompilation for runtime compilation"
