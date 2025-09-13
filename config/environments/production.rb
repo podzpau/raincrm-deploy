@@ -27,6 +27,9 @@ Rails.application.configure do
   # Don't require master key for asset compilation
   config.require_master_key = false
 
+  # Serve assets without precompilation for Rails 8 + Propshaft
+  config.assets.compile = true
+
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 

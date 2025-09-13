@@ -3,7 +3,7 @@ services:
     name: raincrm
     env: ruby
     plan: free
-    buildCommand: bundle install --deployment && bundle exec rails tailwindcss:build && bundle exec rails assets:precompile && bundle exec rake db:migrate
+    buildCommand: bundle install --deployment && bundle exec rake db:migrate
     startCommand: bundle exec puma -C config/puma.rb
     envVars:
       - key: RUBY_VERSION
