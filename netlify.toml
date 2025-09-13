@@ -1,0 +1,16 @@
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build]
+  publish = "public"
+  command = "bundle install && bundle exec rails assets:precompile"
+
+[build.environment]
+  RUBY_VERSION = "3.2.2"
+  RAILS_ENV = "production"
+  NODE_VERSION = "18"
+
+[context.production]
+  environment = { RAILS_SERVE_STATIC_FILES = "true" }
