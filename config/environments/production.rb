@@ -30,6 +30,9 @@ Rails.application.configure do
   # Serve assets without precompilation for Rails 8 + Propshaft
   config.assets.compile = true
 
+  # Use SECRET_KEY_BASE from environment or generate a dummy one
+  config.secret_key_base = ENV['SECRET_KEY_BASE'] || 'dummy_secret_key_base_for_development_only'
+
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
