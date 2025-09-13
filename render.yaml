@@ -3,7 +3,7 @@ services:
     name: raincrm
     env: ruby
     plan: free
-    buildCommand: bundle install; bundle exec rake assets:precompile; bundle exec rake db:create db:migrate db:seed
+    buildCommand: bundle install --without development test && bundle exec rake assets:precompile && bundle exec rake db:create db:migrate
     startCommand: bundle exec puma -C config/puma.rb
     envVars:
       - key: RUBY_VERSION
@@ -16,6 +16,8 @@ services:
         fromDatabase:
           name: raincrm-db
           property: connectionString
+      - key: RAILS_SERVE_STATIC_FILES
+        value: true
 
 databases:
   - name: raincrm-db
